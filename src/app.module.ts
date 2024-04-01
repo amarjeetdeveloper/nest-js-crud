@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { PropertyModule } from './property/property.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { AuthModule } from './auth/auth.module';
         password: 'root',
         database: 'db1',
         entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     UsersModule,
     AuthModule,
+    PropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
