@@ -52,7 +52,7 @@ export class PropertyController {
 
   @Get()
   async findAll(
-    @Query() searchTerm: string,
+    @Query()  searchTerm: { [key: string]: any },
     @Query('page') page = 0,
     @Query('limit') limit = 10,
   ) {

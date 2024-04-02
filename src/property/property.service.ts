@@ -34,7 +34,7 @@ export class PropertyService {
   // when i am trying to create pagination using Nestjs Typeorm paginate in entity they are only taking name @Entity({ name: 'property_entity' })in entity which name we are providing in entity that name database are created in our mysql database
   // simple pagination process
   async findAll(
-    searchTerm: string,
+    searchTerm: { [key: string]: any },
     options: IPaginationOptions,
   ): Promise<Pagination<PropertyEntity>> {
     const queryBuilder = this.propertyRepository.createQueryBuilder('property');
@@ -44,11 +44,6 @@ export class PropertyService {
       Object.entries(searchTerm).forEach(([key, value]) => {
         queryBuilder.andWhere(`property.${key} = :${key}`, { [key]: value });
       });
-    }
-
-    // Ensure page number is at least 1
-    if ((options.page as number) < 1) {
-      options.page = 1;
     }
 
     //  Selecting desired properties
