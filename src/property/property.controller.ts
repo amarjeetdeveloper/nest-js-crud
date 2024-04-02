@@ -19,7 +19,7 @@ import {
   Pagination,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { PropertyEntity } from './entities/property.entity';
+import { PropertyEntity } from './entities/propertyEntity.entity';
 
 @Controller('property')
 export class PropertyController {
@@ -30,8 +30,8 @@ export class PropertyController {
   async create(
     @Body() createPropertyDto: CreatePropertyDto,
     @UploadedFiles() //   validators: [
-    // new ParseFilePipe({
-    files //     // new MaxFileSizeValidator({ maxSize: 1000 }),
+    //     // new MaxFileSizeValidator({ maxSize: 1000 }),
+    files // new ParseFilePipe({
     //     // new FileTypeValidator({ fileType: 'image/jpeg' }),
     //   ],
     // }),
@@ -44,14 +44,20 @@ export class PropertyController {
     return await this.propertyService.create(createPropertyDto);
   }
 
+  // @Get()
+  // findAll(@Query() queryParams: string) {
+  //   // Do something with the query parameters
+  //   return queryParams;
+  // }
+
   @Get()
-  async findAll(@Query('page') page = 0, @Query('limit') limit = 10) {
+  async findAll(
+    @Query() searchTerm: string,
+    @Query('page') page = 0,
+    @Query('limit') limit = 10,
+  ) {
     limit = limit > 10 ? 10 : limit;
-    return await this.propertyService.findAll({
-      page,
-      limit,
-      route: 'http://localhost:3000/property',
-    });
+    return await this.propertyService.findAll(searchTerm, { page, limit });
   }
 
   @Get(':id')

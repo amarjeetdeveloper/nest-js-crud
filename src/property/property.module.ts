@@ -3,7 +3,7 @@ import { PropertyService } from './property.service';
 import { PropertyController } from './property.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
-import { PropertyEntity } from './entities/property.entity';
+import { PropertyEntity } from './entities/propertyEntity.entity';
 
 @Module({
   imports: [

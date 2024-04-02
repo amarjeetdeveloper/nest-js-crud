@@ -3,7 +3,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PropertyEntity } from './entities/property.entity';
+import { PropertyEntity } from './entities/propertyEntity.entity';
 
 import {
   IPaginationOptions,
@@ -33,18 +33,25 @@ export class PropertyService {
 
   // when i am trying to create pagination using Nestjs Typeorm paginate in entity they are only taking name @Entity({ name: 'property_entity' })in entity which name we are providing in entity that name database are created in our mysql database
   // simple pagination process
-  // async findAll(
-  //   options: IPaginationOptions,
-  // ): Promise<Pagination<PropertyEntity>> {
-  //   console.log('property service called options', options);
-  //   return await paginate<PropertyEntity>(this.propertyRepository, options);
-  // }
-
-  // testing other function of pagination
   async findAll(
+    searchTerm: string,
     options: IPaginationOptions,
   ): Promise<Pagination<PropertyEntity>> {
     const queryBuilder = this.propertyRepository.createQueryBuilder('property');
+
+    // Apply filtering based on the searchTerm
+    if (searchTerm) {
+      Object.entries(searchTerm).forEach(([key, value]) => {
+        queryBuilder.andWhere(`property.${key} = :${key}`, { [key]: value });
+      });
+    }
+
+    // Ensure page number is at least 1
+    if ((options.page as number) < 1) {
+      options.page = 1;
+    }
+
+    //  Selecting desired properties
     queryBuilder.select([
       'property.pname',
       'property.leaseStartDate',
